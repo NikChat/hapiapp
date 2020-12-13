@@ -8,6 +8,8 @@ const init = async () => {
     host: 'localhost'
   });
 
+  await server.register(require('inert')); // Serving Static Files
+
   // Home Route
   server.route({
     method: 'GET',
@@ -23,6 +25,23 @@ const init = async () => {
     path: '/user/{name}',
     handler: (req, h) => {
       return `Hello ${req.params.name}`;
+    }
+  });
+
+  // Serving Static Files
+  server.route({
+    method: 'GET',
+    path: '/about',
+    handler: (req, h) => {
+      return h.file('./public/about.html');
+    }
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/image',
+    handler: (req, h) => {
+      return h.file('./public/hapijs.jpeg')
     }
   });
 
