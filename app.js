@@ -71,7 +71,7 @@ const init = async () => {
       let tasks = await Task.find((err, tasks) => {
         console.log(tasks);
       });
-      
+
       // let tasks = [
       //         { text: 'task one' },
       //         { text: 'task two' },
@@ -83,6 +83,22 @@ const init = async () => {
       });
     }
   });
+
+  //Post Task Route
+  server.route({
+    method: 'POST',
+    path: '/tasks',
+    handler: async (req, h) => {
+      let text = req.payload.text; // html form -> name: text
+      let newTask = new Task({ text: text });
+      await newTask.save((err, task) => {
+        if (err) 
+          return console.log(err);
+      });
+
+      return h.redirect().location('tasks');
+    }
+  })
 
   // Vision Templates
   server.views({
