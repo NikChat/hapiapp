@@ -9,13 +9,17 @@ const init = async () => {
   });
 
   await server.register(require('inert')); // Serving Static Files
+  await server.register(require('vision')); // Vision Templates
 
   // Home Route
   server.route({
     method: 'GET',
     path: '/',
     handler: (request, h) => {
-      return 'Hello World!';
+      // return 'Hello World!';
+      return h.view('index', {
+        name: 'Nikolas' 
+      });
     }
   });
 
@@ -43,6 +47,15 @@ const init = async () => {
     handler: (req, h) => {
       return h.file('./public/hapijs.jpeg')
     }
+  });
+
+  // Vision Templates
+  server.views({
+    engines: {
+      html: require('handlebars')
+    },
+    relativeTo: __dirname, // __dirname = the current dir -> path: __dirname + '/views'
+    path: 'views'
   });
 
   // Start Server
