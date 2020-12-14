@@ -1,4 +1,18 @@
 const Hapi = require('hapi');
+const mongoose = require('mongoose');
+mongoose
+  .connect('mongodb://localhost/hapidb', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => console.log('mongoDB connected...'))
+  .catch(err => console.log(err));
+
+// Create Task Model
+const Task = mongoose.model('Task', { text: String });
+// To add initial data:
+// Go to cmd -> MongoDB -> bin folder -> mongo
+// show dbs, use hapidb, db.createCollection('tasks');, db.tasks.insert({text: 'My task 1'});, db.tasks.find()
 
 const init = async () => {
 
@@ -53,12 +67,17 @@ const init = async () => {
   server.route({
     method: 'GET',
     path: '/tasks',
-    handler: (req, h) => {
-      let tasks = [
-              { text: 'task one' },
-              { text: 'task two' },
-              { text: 'task three' }
-            ];
+    handler: async (req, h) => {
+      let tasks = await Task.find((err, tasks) => {
+        console.log(tasks);
+      });
+      
+      // let tasks = [
+      //         { text: 'task one' },
+      //         { text: 'task two' },
+      //         { text: 'task three' }
+      //       ];
+
       return h.view('tasks', {
         tasks: tasks
       });
@@ -76,7 +95,7 @@ const init = async () => {
 
   // Start Server
   await server.start();
-  console.log(`Server is running on ${server.info.uri}`);
+  console.log(`Server is running on: ${server.info.uri}`);
 
 };
 
