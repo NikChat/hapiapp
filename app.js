@@ -49,6 +49,22 @@ const init = async () => {
     }
   });
 
+  // Tasks Route
+  server.route({
+    method: 'GET',
+    path: '/tasks',
+    handler: (req, h) => {
+      let tasks = [
+              { text: 'task one' },
+              { text: 'task two' },
+              { text: 'task three' }
+            ];
+      return h.view('tasks', {
+        tasks: tasks
+      });
+    }
+  });
+
   // Vision Templates
   server.views({
     engines: {
